@@ -69,5 +69,65 @@ public class Traverse {
     v45.neighbors = new ArrayList<>(List.of(v23));
     v23.neighbors = new ArrayList<>(List.of());
     v67.neighbors = new ArrayList<>(List.of(v91));
+
+    printGossipers(diana);
+  }
+
+  public static <T> void printVertices(Vertex<T> vertex) {
+    Set<Vertex<T>> set = new HashSet<>();
+    printHelper(vertex, set);
+  }
+
+  public static <T> void printHelper(Vertex<T> vertex, Set<Vertex<T>> visited) {
+    if (vertex == null) return;
+    if (visited.contains(vertex)) return;
+
+    System.out.println(vertex.data);
+    visited.add(vertex);
+
+    for (Vertex<T> neighbor : vertex.neighbors) {
+      printHelper(neighbor, visited);
+    }
+  }
+
+  public static <T> void printVertices(Map<Integer, Set<Integer>> graph, int start) {
+    Set<Integer> visited = new HashSet<>();
+    printVerticesHelper(graph, start, visited);
+  }
+
+  public static <T> void printVerticesHelper(Map<Integer, Set<Integer>> graph, int start, Set<Integer> visited) {
+    //base cases
+    if (graph == null) return;
+    if (!graph.containsKey((start))) return;
+    if (visited.contains(start)) return;
+
+    //print 'root'
+    System.out.println(start);
+
+    //update Set visited to avoid cycles
+    visited.add(start);
+
+    //iterate through all neighbors and recurse
+    for (int neighbor : graph.get(start)) {
+      printVerticesHelper(graph, neighbor, visited);
+    }
+  }
+
+  public static void printGossipers(Person person) {
+    Set<Person> visited = new HashSet<>();
+    printGossipers(person, visited);
+  }
+
+  public static void printGossipers(Person person, Set<Person> visited) {
+    //base cases
+    if (person == null) return;
+    if (visited.contains(person)) return;
+
+    System.out.println(person.getName());
+    visited.add(person);
+
+    for (Person confidant : person.getConfidants()) {
+      printGossipers(confidant, visited);
+    }
   }
 }
